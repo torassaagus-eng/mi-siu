@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id              String  @id @default(uuid())
+  dni             String  @unique
+  nombre_completo String
+  email           String  @unique
+  password_hash   String
+  rol             String  // "alumno", "docente", "admin"
+
+  comisiones_dictadas Comision[]
+  inscripciones       InscripcionCursada[]
+}
+
+model Materia {
+  id           Int    @id @default(autoincrement())
+  codigo       String @unique
+  nombre       String
+  anio_carrera Int
+  cuatrimestre Int
+
+  comisiones        Comision[]
+  correlativas      Correlatividad[] @relation("MateriaPrincipal")
+  es_requisito_de   Correlatividad[] @relation("MateriaRequisito")
+}
+
+model Correlatividad {
+  materia_id           Int
+  materia_requisito_id Int
+
+  materia           Materia @relation("MateriaPrincipal", fields: [materia_id], references: [id])
+  materia_requisito Materia @relation("MateriaRequisito", fields: [materia_requisito_id], references: [id])
+
+  @@id([materia_id, materia_requisito_id])
+}
+
+model Comision {
+  id            Int    @id @default(autoincrement())
+  materia_id    Int
+  docente_id    String
+  ciclo_lectivo String
+  cupo_maximo   Int
+  horario       String
+
+  materia       Materia              @relation(fields: [materia_id], references: [id])
+  docente       Usuario              @relation(fields: [docente_id], references: [id])
+  inscriptos    InscripcionCursada[]
+}
+
+model InscripcionCursada {
+  id                Int      @id @default(autoincrement())
+  alumno_id         String
+  comision_id       Int
+  fecha_inscripcion DateTime @default(now())
+  estado            String   @default("inscripto")
+  nota_final        Int?     
+
+  alumno   Usuario  @relation(fields: [alumno_id], references: [id])
+  comision Comision @relation(fields: [comision_id], references: [id])
+
+  @@unique([alumno_id, comision_id])
+}

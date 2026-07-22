@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIU-Guaraní - Historia Académica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffffff; color: #444; }
+        
+        /* Cabecera superior */
+        .header-top { padding: 15px 0; border-bottom: 1px solid #e7e7e7; }
+        .logo-box { background-color: #007bc7; color: white; font-weight: bold; padding: 2px 12px; font-size: 28px; border-radius: 4px; }
+        .logo-text { color: #007bc7; font-weight: 800; font-size: 26px; letter-spacing: -0.5px; line-height: 1; }
+        .logo-sub { color: #888; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+        
+        /* Usuario Top Right */
+        .user-info { font-size: 13px; text-align: right; }
+        .user-info .badge { background-color: #888; border-radius: 2px; }
+        .propuesta { font-size: 12px; margin-top: 5px; color: #555; }
+        
+        /* Barra de navegación */
+        .nav-bar-custom { background: linear-gradient(to bottom, #fefefe, #efefef); border-bottom: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-bar-custom .nav-link { color: #666; font-size: 13px; padding: 10px 15px; border-right: 1px solid #e7e7e7; }
+        .nav-bar-custom .nav-link:hover { background-color: #e6e6e6; }
+        .nav-bar-custom .nav-item.dropdown .nav-link.active-tab { background-color: #0088cc; color: white; }
+        
+        /* Título Principal y Botones Exportar */
+        .page-title { color: #0088cc; font-size: 22px; font-weight: normal; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .export-btns button { border: 1px solid #ddd; background: #f9f9f9; padding: 2px 8px; border-radius: 3px; margin-left: 5px; }
+        .export-btns button:hover { background: #eee; }
+        
+        /* Menú Lateral de Filtros */
+        .sidebar-filtros { background-color: #f8f8f8; border: 1px solid #e7e7e7; padding: 15px; border-radius: 2px; }
+        .sidebar-filtros h5 { color: #777; font-weight: bold; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
+        .filter-link { color: #5bc0de; text-decoration: none; font-size: 12px; }
+        .filter-group-title { color: #5bc0de; font-size: 13px; margin-top: 15px; margin-bottom: 5px; }
+        .filter-checkboxes { font-size: 12px; line-height: 1.8; color: #555; }
+        .filter-checkboxes input[type="checkbox"] { margin-right: 5px; }
+        
+        /* Cajas Amarillas Centrales */
+        .yellow-box { background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 2px; padding: 15px; margin-bottom: 15px; }
+        .yellow-box h6 { color: #8a6d3b; font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+        .yellow-box ul { margin-bottom: 0; padding-left: 20px; }
+        .yellow-box li { color: #444; font-size: 13px; line-height: 1.6; }
+        .yellow-box a { color: #5bc0de; text-decoration: none; }
+        .yellow-box a:hover { text-decoration: underline; }
+        .yellow-box-center { background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 2px; padding: 12px; text-align: center; color: #8a6d3b; font-size: 13px; }
+
+        /* Controles Superiores de la Lista */
+        .top-controls { margin-bottom: 15px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+        .btn-ver-por { background-color: #f5f5f5; border: 1px solid #ddd; padding: 4px 12px; color: #555; text-decoration: none; border-radius: 3px; cursor: pointer; }
+        .btn-ver-por.active { background-color: #e4e4e4; box-shadow: inset 0 3px 5px rgba(0,0,0,.05); font-weight: bold; }
+        .search-input { border: 1px solid #ccc; padding: 3px 8px; font-size: 13px; width: 250px; border-radius: 2px; outline: none; }
+        .search-input:focus { border-color: #66afe9; }
+
+        /* Estilos de las Barras Azules y Agrupadores por Año */
+        .anio-section-title { font-size: 16px; font-weight: bold; color: #333; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #3f88b5; padding-bottom: 5px; }
+        .materia-header { background-color: #3f88b5; color: #ffffff; font-weight: bold; font-size: 15px; padding: 6px 12px; margin-top: 15px; border-radius: 3px 3px 0 0; }
+        .materia-detalle { background-color: #ffffff; color: #333333; font-size: 13px; padding: 8px 12px; border-bottom: 1px solid #f0f0f0; }
+        .materia-detalle .link-celeste { color: #5bc0de; text-decoration: none; }
+        .materia-detalle .link-celeste:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Logo y Usuario -->
+    <div class="container header-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="logo-box">G</div>
+                <div class="ms-2">
+                    <div class="logo-text">SIUGUARANÍ</div>
+                    <div class="logo-sub">MÓDULO DE GESTIÓN ACADÉMICA</div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div>
+                    <i class="bi bi-envelope"></i> <span class="badge">0</span> &nbsp;
+                    <i class="bi bi-person-fill"></i> <span class="fw-bold text-uppercase" id="nav-user-name">Usuario</span> <i class="bi bi-caret-down-fill" style="font-size: 10px;"></i>
+                </div>
+                <div class="propuesta">
+                    Propuesta: <strong>Ingeniería en Computación</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <div class="nav-bar-custom">
+        <div class="container d-flex">
+            <a href="panel.html" class="nav-link text-decoration-none">Inscripción a Materias</a>
+            <a href="#" class="nav-link text-decoration-none">Inscripción a Exámenes</a>
+            
+            <div class="nav-item dropdown">
+                <a class="nav-link text-decoration-none dropdown-toggle active-tab" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown">
+                    Reportes
+                </a>
+                <ul class="dropdown-menu shadow" style="font-size: 13px; border-radius: 2px;">
+                    <li><a class="dropdown-item" href="historia.html">Historia académica</a></li>
+                    <li><a class="dropdown-item" href="#">Plan de estudios</a></li>
+                </ul>
+            </div>
+
+            <a href="#" class="nav-link text-decoration-none">Encuestas <i class="bi bi-caret-down-fill"></i></a>
+            <a href="#" class="nav-link text-decoration-none">Trámites <i class="bi bi-caret-down-fill"></i></a>
+            <a href="#" class="nav-link text-decoration-none">Mis datos personales</a>
+            <a href="#" class="nav-link text-decoration-none">Cursos</a>
+            <a href="#" class="nav-link text-decoration-none ms-auto border-start border-end-0">Perfil: Alumno <i class="bi bi-caret-down-fill"></i></a>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="container mb-5 mt-4">
+        <div class="row">
+            
+            <!-- Columna Izquierda (Filtros) -->
+            <div class="col-md-3">
+                <div class="sidebar-filtros">
+                    <h5>Filtre por:</h5>
+                    <a href="#" id="btn-todos" class="filter-link">Todos</a> <span style="font-size: 12px; color: #ccc;">/</span> <a href="#" id="btn-ninguno" class="filter-link">Ninguno</a>
+                    
+                    <div class="filter-group-title">Cursadas</div>
+                    <div class="filter-checkboxes d-flex flex-column">
+                        <label><input type="checkbox" class="filtro-estado" value="Promocionada" checked> Promocionada</label>
+                        <label><input type="checkbox" class="filtro-estado" value="Aprobada" checked> Aprobada</label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Reprobado" checked> Reprobado</i></label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Desaprobada" checked> Desaprobada</i></label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Ausente" checked> Ausente / Libre</i></label>
+                        <label><input type="checkbox" class="filtro-estado" value="En curso" checked> En curso</label>
+                    </div>
+
+                    <div class="filter-group-title">Exámenes</div>
+                    <div class="filter-checkboxes d-flex flex-column">
+                        <label><input type="checkbox" class="filtro-estado" value="Aprobado" checked> Aprobado</label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Desaprobado" checked> Desaprobado</i></label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Ausente" checked> Ausente</i></label>
+                    </div>
+
+                    <div class="filter-group-title">Reconocimientos</div>
+                    <div class="filter-checkboxes d-flex flex-column">
+                        <label><input type="checkbox" class="filtro-estado" value="Equivalencia" checked> Equivalencias aprobadas</label>
+                        <label><i><input type="checkbox" class="filtro-estado" value="Equivalencia Desaprobada" checked> Equivalencias desaprobadas</i></label>
+                        <label><input type="checkbox" class="filtro-estado" value="Resolucion" checked> Aprobaciones por resolución</label>
+                        <label><input type="checkbox" class="filtro-estado" value="Creditos" checked> Créditos</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha (Contenido) -->
+            <div class="col-md-9">
+                <div class="page-title">
+                    <span>Historia académica</span>
+                    <div class="export-btns">
+                        <button class="text-success" title="Exportar a Excel"><i class="bi bi-file-earmark-excel"></i></button>
+                        <button class="text-danger" title="Exportar a PDF"><i class="bi bi-file-earmark-pdf"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Interfaz inicial de Consultas -->
+                <div id="panel-consultas">
+                    <div class="d-flex justify-content-center">
+                        <div class="yellow-box w-50">
+                            <h6>Consultas habituales:</h6>
+                            <ul>
+                                <li><a href="#">Materias en curso</a></li>
+                                <li><a href="#">Materias aprobadas</a></li>
+                                <li><a href="#">Cursadas aprobadas</a></li>
+                                <li><a href="#" id="btn-historia-completa">Historia completa</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="yellow-box-center mt-2">
+                        O utilice los filtros para personalizar su búsqueda
+                    </div>
+                </div>
+
+                <!-- Panel de Resultados (Oculto al principio) -->
+                <div id="panel-resultados" style="display: none;">
+                    
+                    <!-- Botonera superior interactiva -->
+                    <div class="top-controls">
+                        <span>Ver por</span>
+                        <button id="btn-modo-anio" class="btn-ver-por">Año</button>
+                        <button id="btn-modo-actividad" class="btn-ver-por active">Actividad/Reconocimiento</button>
+                        <input type="text" id="input-busqueda" class="search-input ms-2" placeholder="Ingrese texto a buscar...">
+                    </div>
+
+                    <div id="lista-notas">
+                        <!-- Aquí se inyectarán las materias dinámicamente -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let todasLasInscripciones = [];
+        let modoVisualizacion = 'actividad'; // 'actividad' o 'anio'
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const nombre = localStorage.getItem('nombreAlumno');
+            if (nombre) document.getElementById('nav-user-name').innerText = nombre;
+
+            // Al hacer clic en "Historia completa"
+            document.getElementById('btn-historia-completa').addEventListener('click', async (e) => {
+                e.preventDefault(); 
+                
+                const dni = localStorage.getItem('dniAlumno');
+                document.getElementById('panel-consultas').style.display = 'none';
+                document.getElementById('panel-resultados').style.display = 'block';
+
+                if (dni) {
+                    try {
+                        const respuesta = await fetch(`http://localhost:3000/historia/${dni}`);
+                        todasLasInscripciones = await respuesta.json(); 
+                        renderizarLista(); 
+                    } catch (error) {
+                        console.error("Error trayendo la historia:", error);
+                        document.getElementById('lista-notas').innerHTML = '<div class="text-danger mt-3">Error al cargar las materias.</div>';
+                    }
+                }
+            });
+
+            // Eventos de Filtros y Búsqueda
+            document.querySelectorAll('.filtro-estado').forEach(chk => {
+                chk.addEventListener('change', renderizarLista);
+            });
+            
+            document.getElementById('btn-todos').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.filtro-estado').forEach(chk => chk.checked = true);
+                renderizarLista();
+            });
+            
+            document.getElementById('btn-ninguno').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.filtro-estado').forEach(chk => chk.checked = false);
+                renderizarLista();
+            });
+
+            // Botones de Modo de Visualización (Año vs Actividad)
+            document.getElementById('btn-modo-actividad').addEventListener('click', (e) => {
+                e.preventDefault();
+                modoVisualizacion = 'actividad';
+                document.getElementById('btn-modo-actividad').classList.add('active');
+                document.getElementById('btn-modo-anio').classList.remove('active');
+                renderizarLista();
+            });
+
+            document.getElementById('btn-modo-anio').addEventListener('click', (e) => {
+                e.preventDefault();
+                modoVisualizacion = 'anio';
+                document.getElementById('btn-modo-anio').classList.add('active');
+                document.getElementById('btn-modo-actividad').classList.remove('active');
+                renderizarLista();
+            });
+
+            // Buscador en tiempo real
+            document.getElementById('input-busqueda').addEventListener('input', () => {
+                renderizarLista();
+            });
+        });
+
+        // Motor principal de renderizado y filtros combinados
+        function renderizarLista() {
+            const contenedor = document.getElementById('lista-notas');
+            contenedor.innerHTML = ''; 
+
+            // 1. Obtener estados tildados en el menú lateral
+            const checkboxes = document.querySelectorAll('.filtro-estado');
+            const estadosSeleccionados = Array.from(checkboxes)
+                .filter(chk => chk.checked)
+                .map(chk => chk.value.toLowerCase());
+
+            // 2. Obtener texto del buscador
+            const textoBusqueda = document.getElementById('input-busqueda').value.toLowerCase();
+
+            // 3. Filtrar la lista general según checkboxes y texto de búsqueda
+            const filtradas = todasLasInscripciones.filter(insc => {
+                const estadoValido = estadosSeleccionados.includes(insc.estado.toLowerCase());
+                
+                const nombreMateria = insc.comision.materia.nombre.toLowerCase();
+                const codigoMateria = insc.comision.materia.codigo.toLowerCase();
+                const textoValido = nombreMateria.includes(textoBusqueda) || codigoMaturiaFiltro(codigoMateria, textoBusqueda);
+
+                return estadoValido && textoValido;
+            });
+
+            function codigoMaturiaFiltro(codigo, texto) {
+                return codigo.includes(texto);
+            }
+
+            if(filtradas.length === 0) {
+                contenedor.innerHTML = '<div class="text-muted mt-4">No hay materias que coincidan con los filtros seleccionados.</div>';
+                return;
+            }
+
+            // 4. Dependiendo del botón superior, agrupamos distinto
+            if (modoVisualizacion === 'actividad') {
+                renderizarPorActividad(filtradas, contenedor);
+            } else {
+                renderizarPorAnio(filtradas, contenedor);
+            }
+        }
+
+        // Vista por Actividad/Reconocimiento (Barras Azules generales)
+        function renderizarPorActividad(filtradas, contenedor) {
+            const materiasAgrupadas = {};
+            filtradas.forEach(insc => {
+                const codigo = insc.comision.materia.codigo;
+                if(!materiasAgrupadas[codigo]) {
+                    materiasAgrupadas[codigo] = {
+                        nombre: insc.comision.materia.nombre,
+                        registros: []
+                    };
+                }
+                materiasAgrupadas[codigo].registros.push(insc);
+            });
+
+            for (const codigo in materiasAgrupadas) {
+                const materia = materiasAgrupadas[codigo];
+                let htmlGrupo = `
+                    <div class="mb-3 shadow-sm border" style="border-radius: 3px;">
+                        <div class="materia-header m-0">
+                            ${materia.nombre} (${codigo})
+                        </div>
+                `;
+
+                materia.registros.forEach(insc => {
+                    const fecha = new Date(insc.fecha_inscripcion).toLocaleDateString('es-AR');
+                    const notaTexto = insc.nota_final ? ` ${insc.nota_final} ` : ' ';
+                    const tipoActividad = insc.estado.toLowerCase().includes('promocion') ? 'Promoción' : 'Regularidad';
+
+                    htmlGrupo += `
+                        <div class="materia-detalle">
+                            <span class="fw-bold">${tipoActividad}</span> - ${insc.estado}${notaTexto}${fecha} - <a href="#" class="link-celeste">Detalle</a>
+                        </div>
+                    `;
+                });
+
+                htmlGrupo += `</div>`;
+                contenedor.innerHTML += htmlGrupo;
+            }
+        }
+
+        // Vista por Año (Agrupa primero por Año de Carrera: 1º Año, 2º Año, etc.)
+        function renderizarPorAnio(filtradas, contenedor) {
+            const aniosAgrupados = {};
+            filtradas.forEach(insc => {
+                const anioCarrera = insc.comision.materia.anio_carrera || 1;
+                if(!aniosAgrupados[anioCarrera]) {
+                    aniosAgrupados[anioCarrera] = [];
+                }
+                aniosAgrupados[anioCarrera].push(insc);
+            });
+
+            // Ordenamos los años (1, 2, 3...)
+            const aniosOrdenados = Object.keys(aniosAgrupados).sort();
+
+            aniosOrdenados.forEach(anio => {
+                contenedor.innerHTML += `<div class="anio-section-title">${anio}º Año</div>`;
+                
+                // Reutilizamos la lógica de agrupación por materia dentro de cada año
+                const subContenedor = document.createElement('div');
+                renderizarPorActividad(aniosAgrupados[anio], subContenedor);
+                contenedor.appendChild(subContenedor);
+            });
+        }
+    </script>
+</body>
+</html>
