@@ -6,7 +6,7 @@
     <title>SIU-Guaraní - Acceso</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (Para el ícono del ojo en la contraseña) -->
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
     <style>
@@ -15,11 +15,9 @@
             color: #555; 
             font-family: Arial, Helvetica, sans-serif; 
         }
-        
-        /* Cabecera del Logo */
         .header-top { padding: 20px 0; }
         .logo-box {
-            background-color: #007bc7; /* Azul SIU */
+            background-color: #007bc7;
             color: white; 
             font-weight: bold; 
             padding: 2px 12px; 
@@ -28,34 +26,23 @@
         }
         .logo-text { color: #007bc7; font-weight: 800; font-size: 26px; letter-spacing: -0.5px; line-height: 1; }
         .logo-sub { color: #888; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
-        
-        /* Barra de navegación gris */
         .nav-bar-custom { background-color: #f8f8f8; border-top: 1px solid #e7e7e7; border-bottom: 1px solid #e7e7e7; }
         .nav-bar-custom .nav-link { color: #666; border: none; padding: 12px 20px; font-size: 14px; }
         .nav-bar-custom .nav-link.active { background-color: #007bc7; color: white; }
         .nav-bar-custom .nav-link:hover:not(.active) { background-color: #ebebeb; }
-        
-        /* Columnas y separadores */
         .left-col { border-right: 1px solid #eee; padding-right: 40px; padding-bottom: 50px; }
         .right-col { padding-left: 40px; padding-top: 15px; }
-        
-        /* Títulos de sección */
         h3.section-title { color: #888; font-weight: normal; font-size: 22px; margin-bottom: 20px; margin-top: 30px; }
         .right-col h2 { color: #777; font-weight: normal; font-size: 26px; }
-        
-        /* Botones y links */
         .btn-ingresar { background-color: #4eb6d7; color: white; border: none; font-weight: normal; font-size: 15px; }
         .btn-ingresar:hover { background-color: #3ca0c0; color: white; }
         .link-celeste { color: #4eb6d7; font-size: 14px; text-decoration: none; }
         .link-celeste:hover { text-decoration: underline; }
-        
-        /* Input focus celeste */
         .form-control:focus { border-color: #80bdff; box-shadow: 0 0 5px rgba(128,189,255,.5); }
     </style>
 </head>
 <body>
 
-    <!-- Cabecera Logo -->
     <div class="container header-top d-flex align-items-center">
         <div class="logo-box">G</div>
         <div class="ms-2">
@@ -64,7 +51,6 @@
         </div>
     </div>
 
-    <!-- Barra de Navegación -->
     <div class="nav-bar-custom">
         <div class="container d-flex">
             <a href="#" class="nav-link active">Acceso</a>
@@ -75,19 +61,15 @@
         </div>
     </div>
 
-    <!-- Contenido Principal -->
     <div class="container mt-4">
         <div class="row">
-            
-            <!-- Columna Izquierda (Formularios) -->
             <div class="col-md-5 left-col">
-                
                 <h3 class="section-title">Ingresá tus datos</h3>
                 
                 <form id="form-login">
                     <div class="mb-3">
                         <label class="form-label text-secondary mb-1" style="font-size: 14px;">Usuario</label>
-                        <input type="text" id="input-usuario" class="form-control form-control-sm" style="border-color: #80bdff; box-shadow: 0 0 5px rgba(128,189,255,.5);">
+                        <input type="text" id="input-usuario" class="form-control form-control-sm">
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary mb-1" style="font-size: 14px;">Contraseña</label>
@@ -99,7 +81,6 @@
                         </div>
                     </div>
                     
-                    <!-- Este botón, por ahora, te redirige visualmente al panel que armamos antes -->
                     <button id="btn-login" class="btn btn-ingresar px-4 py-1 mt-2">Ingresar</button>
                 </form>
                 
@@ -115,14 +96,11 @@
                 <p class="mt-4" style="font-size: 13px; color: #333;">
                     Si deseás inscribirte a cursos, <strong>y no tenés usuario y clave de acceso al sistema</strong>, podés crearlo accediendo <a href="#" class="link-celeste">aquí</a>.
                 </p>
-                
             </div>
 
-            <!-- Columna Derecha (Información) -->
             <div class="col-md-7 right-col">
                 <h2>SIU Guaraní</h2>
                 <p class="mt-3 text-dark" style="font-size: 14px;">Algunas de las cosas que podés hacer con este sistema son:</p>
-                
                 <ul class="text-dark" style="font-size: 14px; line-height: 1.8;">
                     <li>Inscribirte a materias y exámenes.</li>
                     <li>Consultar el plan de tu propuesta.</li>
@@ -131,26 +109,23 @@
                     <li>Recibir alertas sobre períodos de inscripción o vencimiento de exámenes finales.</li>
                 </ul>
             </div>
-            
         </div>
     </div>
+
 <script>
     document.getElementById('btn-login').addEventListener('click', async (evento) => {
-        evento.preventDefault(); // Evitamos que la página se recargue sola
+        evento.preventDefault();
 
-        // Capturamos lo que el usuario escribió en las cajas de texto
         const dniIngresado = document.getElementById('input-usuario').value;
         const passwordIngresada = document.getElementById('input-password').value;
 
-        // Validamos que no intente entrar con los campos vacíos
         if (!dniIngresado || !passwordIngresada) {
             alert("Por favor, completa ambos campos.");
             return;
         }
 
         try {
-            // Enviamos los datos por POST a tu servidor Node.js
-            const respuesta = await fetch('http://localhost:3000/login', {
+            const respuesta = await fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -161,18 +136,14 @@
                 })
             });
 
-            // Si el servidor responde que está todo OK (Status 200)
             if (respuesta.ok) {
                 const datos = await respuesta.json();
                 
-                // GUARDAMOS EL NOMBRE EN LA MEMORIA DEL NAVEGADOR
                 localStorage.setItem('nombreAlumno', datos.usuario.nombre);
                 localStorage.setItem('dniAlumno', dniIngresado);
                 
-                // Redirigimos oficialmente al panel principal
                 window.location.href = "panel.html";
             } else {
-                // Si el servidor responde con error
                 alert("Los datos ingresados son incorrectos. Verificá tu DNI y contraseña.");
             }
         } catch (error) {

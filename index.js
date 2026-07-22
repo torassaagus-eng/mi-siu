@@ -11,10 +11,15 @@ const prisma = new PrismaClient();
 app.use(cors()); // Permite que otras páginas web se conecten a nuestro servidor
 app.use(express.json()); // Permite que el servidor entienda datos en formato JSON
 
-// ¡ESTA LÍNEA ES LA CLAVE!: Sirve los archivos HTML/CSS/JS de tu carpeta frontend
+// Sirve los archivos estáticos de la carpeta frontend
 app.use(express.static('frontend'));
 
-// 4. NUESTRA PRIMERA RUTA (Endpoint)
+// Ruta explícita para la página principal
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/frontend/index.html');
+});
+
+// 4. RUTA DE MATERIAS
 app.get('/materias', async (req, res) => {
   try {
     const todasLasMaterias = await prisma.materia.findMany();
@@ -80,7 +85,6 @@ app.post('/login', async (req, res) => {
 
 // 5. Puerto dinámico para Render (o 3000 si lo probás en tu PC)
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`¡Servidor encendido en el puerto ${PORT}!`);
 });
