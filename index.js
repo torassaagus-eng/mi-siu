@@ -84,7 +84,7 @@ app.post('/login', async (req, res) => {
 });
 
 // 5. Puerto dinámico para Render (o 3000 si lo probás en tu PC)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`¡Servidor encendido en el puerto ${PORT}!`);
 });
