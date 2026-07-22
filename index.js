@@ -37,7 +37,7 @@ app.get('/historia/:dni', async (req, res) => {
     const alumno = await prisma.usuario.findUnique({
       where: { dni: dni },
       include: {
-        inscripciones: {
+        inscripcionCursada: {
           include: {
             comision: {
               include: { materia: true }
@@ -49,7 +49,7 @@ app.get('/historia/:dni', async (req, res) => {
 
     if (!alumno) return res.status(404).json({ error: "Alumno no encontrado" });
 
-    res.json(alumno.inscripciones);
+    res.json(alumno.inscripcionCursada);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al cargar la historia" });
