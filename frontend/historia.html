@@ -58,11 +58,18 @@
         .yellow-box a:hover { text-decoration: underline; }
         .yellow-box-center { background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 2px; padding: 12px; text-align: center; color: #8a6d3b; font-size: 13px; }
 
-        /* Controles Superiores de la Lista */
-        .top-controls { margin-bottom: 15px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-        .btn-ver-por { background-color: #f5f5f5; border: 1px solid #ddd; padding: 4px 12px; color: #555; text-decoration: none; border-radius: 3px; cursor: pointer; }
-        .btn-ver-por.active { background-color: #e4e4e4; box-shadow: inset 0 3px 5px rgba(0,0,0,.05); font-weight: bold; }
-        .search-input { border: 1px solid #ccc; padding: 3px 8px; font-size: 13px; width: 250px; border-radius: 2px; outline: none; }
+        /* Controles Superiores de la Lista (MODIFICADOS) */
+        .top-controls { margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; }
+        .top-controls-label { color: #007bc7; margin-right: 10px; }
+        
+        /* Grupo de botones pegados */
+        .btn-group-custom { display: flex; border: 1px solid #ccc; border-radius: 3px; overflow: hidden; background: #fdfdfd; }
+        .btn-ver-por { background-color: transparent; border: none; border-right: 1px solid #ccc; padding: 4px 12px; color: #333; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+        .btn-ver-por:last-child { border-right: none; }
+        .btn-ver-por.active { background-color: #e6e6e6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.08); }
+        
+        /* Inputs y Selects */
+        .search-input { border: 1px solid #ccc; padding: 4px 8px; font-size: 13px; border-radius: 3px; outline: none; background-color: #fff; }
         .search-input:focus { border-color: #66afe9; }
 
         /* Estilos de las Barras Azules y Agrupadores por Año */
@@ -180,7 +187,6 @@
                     <span>Historia académica</span>
                     <div class="export-btns">
                         <button class="text-success" title="Exportar a Excel"><i class="bi bi-file-earmark-excel"></i></button>
-                        <!-- ACÁ AGREGAMOS EL ID AL BOTÓN DE PDF -->
                         <button class="text-danger" id="btn-export-pdf" title="Exportar a PDF"><i class="bi bi-file-earmark-pdf"></i></button>
                     </div>
                 </div>
@@ -207,12 +213,22 @@
                 <!-- Panel de Resultados (Oculto al principio) -->
                 <div id="panel-resultados" style="display: none;">
                     
-                    <!-- Botonera superior interactiva -->
+                    <!-- Botonera superior interactiva (MODIFICADA) -->
                     <div class="top-controls">
-                        <span>Ver por</span>
-                        <button id="btn-modo-anio" class="btn-ver-por">Año</button>
-                        <button id="btn-modo-actividad" class="btn-ver-por active">Actividad/Reconocimiento</button>
-                        <input type="text" id="input-busqueda" class="search-input ms-2" placeholder="Ingrese texto a buscar...">
+                        <span class="top-controls-label">Ver por</span>
+                        
+                        <div class="btn-group-custom">
+                            <button id="btn-modo-anio" class="btn-ver-por">Año</button>
+                            <button id="btn-modo-actividad" class="btn-ver-por active">Actividad/Reconocimiento</button>
+                        </div>
+
+                        <!-- Input de búsqueda por texto (se oculta en modo Año) -->
+                        <input type="text" id="input-busqueda" class="search-input ms-3" placeholder="Ingrese texto a buscar..." style="width: 250px;">
+                        
+                        <!-- Dropdown de Años (se muestra en modo Año) -->
+                        <select id="select-anio" class="search-input ms-3" style="display: none; width: 120px; cursor: pointer;">
+                            <!-- Las opciones se inyectan acá con JavaScript -->
+                        </select>
                     </div>
 
                     <div id="lista-notas">
@@ -247,6 +263,10 @@
                     try {
                         const respuesta = await fetch(`/historia/${dni}`);
                         todasLasInscripciones = await respuesta.json(); 
+                        
+                        // Llenar el menú desplegable de años
+                        poblarFiltroAnios(todasLasInscripciones);
+                        
                         renderizarLista(); 
                     } catch (error) {
                         console.error("Error trayendo la historia:", error);
@@ -255,7 +275,7 @@
                 }
             });
 
-            // Eventos de Filtros y Búsqueda
+            // Eventos de Filtros Checkbox
             document.querySelectorAll('.filtro-estado').forEach(chk => {
                 chk.addEventListener('change', renderizarLista);
             });
@@ -278,6 +298,11 @@
                 modoVisualizacion = 'actividad';
                 document.getElementById('btn-modo-actividad').classList.add('active');
                 document.getElementById('btn-modo-anio').classList.remove('active');
+                
+                // Mostrar input, ocultar select
+                document.getElementById('input-busqueda').style.display = 'block';
+                document.getElementById('select-anio').style.display = 'none';
+                
                 renderizarLista();
             });
 
@@ -286,17 +311,43 @@
                 modoVisualizacion = 'anio';
                 document.getElementById('btn-modo-anio').classList.add('active');
                 document.getElementById('btn-modo-actividad').classList.remove('active');
+                
+                // Ocultar input, mostrar select
+                document.getElementById('input-busqueda').style.display = 'none';
+                document.getElementById('select-anio').style.display = 'block';
+                
                 renderizarLista();
             });
 
-            // Buscador en tiempo real
-            document.getElementById('input-busqueda').addEventListener('input', () => {
-                renderizarLista();
-            });
+            // Buscadores (Input texto y Dropdown Año)
+            document.getElementById('input-busqueda').addEventListener('input', renderizarLista);
+            document.getElementById('select-anio').addEventListener('change', renderizarLista);
 
             // EVENTO PARA EXPORTAR EL PDF
             document.getElementById('btn-export-pdf').addEventListener('click', generarPDF);
         });
+
+        // Extrae los años de la cursada para llenar el select
+        function poblarFiltroAnios(inscripciones) {
+            const select = document.getElementById('select-anio');
+            const anios = new Set();
+            
+            inscripciones.forEach(insc => {
+                const anio = new Date(insc.fecha_inscripcion).getFullYear();
+                anios.add(anio);
+            });
+            
+            select.innerHTML = '';
+            
+            // Ordenar de mayor a menor (ej: 2024, 2023, 2022)
+            const aniosOrdenados = Array.from(anios).sort((a, b) => b - a);
+            aniosOrdenados.forEach(anio => {
+                const opt = document.createElement('option');
+                opt.value = anio;
+                opt.innerText = anio;
+                select.appendChild(opt);
+            });
+        }
 
         // Motor principal de renderizado y filtros combinados
         function renderizarLista() {
@@ -309,19 +360,30 @@
                 .map(chk => chk.value.toLowerCase());
 
             const textoBusqueda = document.getElementById('input-busqueda').value.toLowerCase();
+            const anioSeleccionado = document.getElementById('select-anio').value;
 
+            // Filtramos las materias
             inscripcionesFiltradas = todasLasInscripciones.filter(insc => {
                 const estadoValido = estadosSeleccionados.includes(insc.estado.toLowerCase());
-                const nombreMateria = insc.comision.materia.nombre.toLowerCase();
-                const codigoMateria = insc.comision.materia.codigo.toLowerCase();
-                const textoValido = nombreMateria.includes(textoBusqueda) || codigoMaturiaFiltro(codigoMateria, textoBusqueda);
+                
+                let condicionExtra = true;
+                
+                // Si estamos en Actividad, filtramos por lo que escriba en la barra
+                if (modoVisualizacion === 'actividad') {
+                    const nombreMateria = insc.comision.materia.nombre.toLowerCase();
+                    const codigoMateria = insc.comision.materia.codigo.toLowerCase();
+                    condicionExtra = nombreMateria.includes(textoBusqueda) || codigoMateria.includes(textoBusqueda);
+                } 
+                // Si estamos en Año, filtramos únicamente por el menú desplegable
+                else if (modoVisualizacion === 'anio') {
+                    const anioMateria = new Date(insc.fecha_inscripcion).getFullYear().toString();
+                    if (anioSeleccionado) {
+                        condicionExtra = (anioMateria === anioSeleccionado);
+                    }
+                }
 
-                return estadoValido && textoValido;
+                return estadoValido && condicionExtra;
             });
-
-            function codigoMaturiaFiltro(codigo, texto) {
-                return codigo.includes(texto);
-            }
 
             if(inscripcionesFiltradas.length === 0) {
                 contenedor.innerHTML = '<div class="text-muted mt-4">No hay materias que coincidan con los filtros seleccionados.</div>';
