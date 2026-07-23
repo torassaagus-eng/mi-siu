@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIU-Guaraní - Promedio y Porcentaje de Avance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #ffffff; color: #444; }
+        
+        /* Cabecera superior */
+        .header-top { padding: 15px 0; border-bottom: 1px solid #e7e7e7; }
+        .logo-box { background-color: #007bc7; color: white; font-weight: bold; padding: 2px 12px; font-size: 28px; border-radius: 4px; }
+        .logo-text { color: #007bc7; font-weight: 800; font-size: 26px; letter-spacing: -0.5px; line-height: 1; }
+        .logo-sub { color: #888; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+        
+        /* Usuario Top Right */
+        .user-info { font-size: 13px; text-align: right; }
+        .user-info .badge { background-color: #888; border-radius: 2px; }
+        .propuesta { font-size: 12px; margin-top: 5px; color: #555; }
+        
+        /* Barra de navegación */
+        .nav-bar-custom { background: linear-gradient(to bottom, #fefefe, #efefef); border-bottom: 1px solid #ddd; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .nav-bar-custom .nav-link { color: #666; font-size: 13px; padding: 10px 15px; border-right: 1px solid #e7e7e7; }
+        .nav-bar-custom .nav-link:hover { background-color: #e6e6e6; }
+        
+        /* Estilos de la página de Avance */
+        .page-title { color: #0088cc; font-size: 22px; font-weight: normal; margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 25px; }
+        .card-stats { border: 1px solid #e7e7e7; border-radius: 4px; background-color: #f9f9f9; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .stat-number { font-size: 38px; font-weight: bold; color: #007bc7; margin-top: 10px; }
+        .stat-label { font-size: 15px; color: #666; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Logo y Usuario -->
+    <div class="container header-top">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="logo-box">G</div>
+                <div class="ms-2">
+                    <div class="logo-text">SIUGUARANÍ</div>
+                    <div class="logo-sub">MÓDULO DE GESTIÓN ACADÉMICA</div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div>
+                    <i class="bi bi-envelope"></i> <span class="badge">0</span> &nbsp;
+                    <i class="bi bi-person-fill"></i> <span class="fw-bold text-uppercase" id="nav-user-name">Usuario</span> <i class="bi bi-caret-down-fill" style="font-size: 10px;"></i>
+                </div>
+                <div class="propuesta">
+                    Propuesta: <strong>Ingeniería en Computación</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <div class="nav-bar-custom">
+        <div class="container d-flex">
+            <a href="panel.html" class="nav-link text-decoration-none">Inscripción a Materias</a>
+            <a href="#" class="nav-link text-decoration-none">Inscripción a Exámenes</a>
+            
+            <div class="nav-item dropdown">
+                <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown">
+                    Reportes
+                </a>
+                <ul class="dropdown-menu shadow" style="font-size: 13px; border-radius: 2px;">
+                    <li><a class="dropdown-item" href="historia.html">Historia académica</a></li>
+                    <li><a class="dropdown-item" href="avance.html">Promedio y porcentaje de avance en la carrera</a></li>
+                </ul>
+            </div>
+            <a href="encuestas.html" class="nav-link text-decoration-none">Encuestas</a>
+            <a href="#" class="nav-link text-decoration-none">Trámites</a>
+            <a href="#" class="nav-link text-decoration-none">Mis datos personales</a>
+            <a href="#" class="nav-link text-decoration-none">Cursos</a>
+            <a href="#" class="nav-link text-decoration-none ms-auto border-start border-end-0">Perfil: Alumno <i class="bi bi-caret-down-fill"></i></a>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="container mb-5">
+        <h2 class="page-title">Promedio y porcentaje de avance en la carrera</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card-stats">
+                    <div class="stat-label">Promedio histórico (con desaprobadas)</div>
+                    <div class="stat-number" id="promedio-con">-</div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card-stats">
+                    <div class="stat-label">Promedio sin tomar aplazos</div>
+                    <div class="stat-number" id="promedio-sin">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card-stats">
+                    <div class="stat-label">Porcentaje de avance en la carrera</div>
+                    <div class="stat-number text-success" id="porcentaje-avance">-</div>
+                    <p class="text-muted mt-2" style="font-size: 13px;" id="detalle-materias">Calculando materias aprobadas...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts y Lógica de Cálculo -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const nombre = localStorage.getItem('nombreAlumno');
+            const dni = localStorage.getItem('dniAlumno');
+
+            if (nombre) document.getElementById('nav-user-name').innerText = nombre;
+
+            if (dni) {
+                try {
+                    const respuesta = await fetch(`/historia/${dni}`);
+                    const inscripciones = await respuesta.json();
+
+                    // Filtramos materias aprobadas / promocionadas que tengan nota numérica
+                    const aprobadasConNota = inscripciones.filter(i => 
+                        (i.estado.toLowerCase() === 'aprobada' || i.estado.toLowerCase() === 'promocionada') && 
+                        i.nota_final !== null
+                    );
+
+                    // 1. Cálculo de Promedios
+                    if (aprobadasConNota.length > 0) {
+                        const sumaNotas = aprobadasConNota.reduce((acc, curr) => acc + curr.nota_final, 0);
+                        const promedioSinAplazos = (sumaNotas / aprobadasConNota.length).toFixed(2);
+                        
+                        document.getElementById('promedio-sin').innerText = promedioSinAplazos;
+                        document.getElementById('promedio-con').innerText = promedioSinAplazos; // Ajustable si hay desaprobadas
+                    } else {
+                        document.getElementById('promedio-sin').innerText = "0.00";
+                        document.getElementById('promedio-con').innerText = "0.00";
+                    }
+
+                    // 2. Cálculo de Porcentaje de Avance (Asumiendo un total de 30 materias en la carrera de ingeniería)
+                    const totalMateriasCarrera = 30; 
+                    // Usamos un Set para contar materias únicas aprobadas (por si hay registros duplicados)
+                    const materiasUnicasAprobadas = new Set(aprobadasConNota.map(i => i.comision.materia.codigo)).size;
+                    
+                    const porcentaje = Math.min(100, ((materiasUnicasAprobadas / totalMateriasCarrera) * 100)).toFixed(1);
+
+                    document.getElementById('porcentaje-avance').innerText = `${porcentaje}%`;
+                    document.getElementById('detalle-materias').innerText = `Has aprobado ${materiasUnicasAprobadas} de un total aproximado de ${totalMateriasCarrera} materias del plan de estudios.`;
+
+                } catch (error) {
+                    console.error("Error al calcular estadísticas:", error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

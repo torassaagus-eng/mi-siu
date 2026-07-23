@@ -30,14 +30,14 @@ async function main() {
   // 3. El historial completo que me pasaste
   const historial = [
     // --- PRIMER AÑO | 1º Cuatrimestre ---
-    { cod: "CFG01", nom: "Universidad, Sociedad y Conocimientos", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 7, fecha: "2024-07-05" }] },
-    { cod: "CFG02", nom: "Problemáticas contemporáneas", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2024-07-12" }] },
+    { cod: "CFG01", nom: "Universidad, Sociedad y Conocimientos", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2024-07-05" }] },
+    { cod: "CFG02", nom: "Problemáticas contemporáneas", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Promocionada", nota: 8, fecha: "2024-07-12" }] },
     { cod: "CB01", nom: "Taller de Estadística y Cálculo", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 8, fecha: "2024-07-18" }] },
     { cod: "CB02", nom: "Taller de Lectura y Escritura Académica", anio_carrera: 1, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 7, fecha: "2024-07-22" }] },
 
     // --- PRIMER AÑO | 2º Cuatrimestre ---
     { cod: "CB05", nom: "Introducción al Análisis Matemático", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 6, fecha: "2024-12-10" }] },
-    { cod: "CB06", nom: "Fundamentos de Informática", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 7, fecha: "2024-12-14" }] },
+    { cod: "CB06", nom: "Fundamentos de Informática", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Promocionada", nota: 9, fecha: "2024-12-14" }] },
     { cod: "CB07", nom: "Química General", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 8, fecha: "2024-12-18" }] },
     { cod: "CB08", nom: "Física I", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 6, fecha: "2024-12-21" }] },
     { cod: "CB09", nom: "Algoritmos y Estructuras de Datos", anio_carrera: 1, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 7, fecha: "2024-12-26" }] },
@@ -46,7 +46,7 @@ async function main() {
     { cod: "CC01", nom: "Fundamentos de Computación", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 8, fecha: "2025-07-06" }] },
     { cod: "CB10", nom: "Análisis Matemático I", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2025-07-10" }] },
     { cod: "CB11", nom: "Álgebra y Geometría Analítica", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 7, fecha: "2025-07-15" }] },
-    { cod: "CB12", nom: "Sistema de Representación Gráfica", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 8, fecha: "2025-07-20" }] },
+    { cod: "CB12", nom: "Sistema de Representación Gráfica", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Promocionada", nota: 9, fecha: "2025-07-20" }] },
     { cod: "CC14", nom: "Inglés I", anio_carrera: 2, cuatrimestre: 1, notas: [{ est: "Promocionada", nota: 8, fecha: "2025-07-25" }] },
 
     // --- SEGUNDO AÑO | 2º Cuatrimestre ---
