@@ -7,6 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
+    <!-- Librerías para generar el PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
     <style>
         body { font-family: Arial, sans-serif; background-color: #ffffff; color: #444; }
         
@@ -29,20 +33,12 @@
 
         /* Efecto Globo de Diálogo para el Menú Encuestas */
         .dropdown-menu-custom { margin-top: 8px !important; border-radius: 3px; border: 1px solid #ccc; font-size: 13px; padding: 5px 0; }
-        .dropdown-menu-custom::before {
-            content: ""; position: absolute; top: -6px; left: 20px;
-            border-width: 0 6px 6px; border-style: solid;
-            border-color: transparent transparent #fff; z-index: 10;
-        }
-        .dropdown-menu-custom::after {
-            content: ""; position: absolute; top: -7px; left: 19px;
-            border-width: 0 7px 7px; border-style: solid;
-            border-color: transparent transparent #ccc; z-index: 9;
-        }
+        .dropdown-menu-custom::before { content: ""; position: absolute; top: -6px; left: 20px; border-width: 0 6px 6px; border-style: solid; border-color: transparent transparent #fff; z-index: 10; }
+        .dropdown-menu-custom::after { content: ""; position: absolute; top: -7px; left: 19px; border-width: 0 7px 7px; border-style: solid; border-color: transparent transparent #ccc; z-index: 9; }
         
         /* Título Principal y Botones Exportar */
         .page-title { color: #0088cc; font-size: 22px; font-weight: normal; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .export-btns button { border: 1px solid #ddd; background: #f9f9f9; padding: 2px 8px; border-radius: 3px; margin-left: 5px; }
+        .export-btns button { border: 1px solid #ddd; background: #f9f9f9; padding: 2px 8px; border-radius: 3px; margin-left: 5px; cursor: pointer; }
         .export-btns button:hover { background: #eee; }
         
         /* Menú Lateral de Filtros */
@@ -108,9 +104,7 @@
             <a href="#" class="nav-link text-decoration-none">Inscripción a Exámenes</a>
             
             <div class="nav-item dropdown">
-                <a class="nav-link text-decoration-none dropdown-toggle active-tab" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown">
-                    Reportes
-                </a>
+                <a class="nav-link text-decoration-none dropdown-toggle active-tab" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown">Reportes</a>
                 <ul class="dropdown-menu shadow" style="font-size: 13px; border-radius: 2px;">
                     <li><a class="dropdown-item" href="actuacion.html">Actuación provisoria</a></li>
                     <li><a class="dropdown-item" href="agenda.html">Agenda</a></li>
@@ -130,9 +124,7 @@
 
             <!-- Nuevo Menú Encuestas -->
             <div class="nav-item dropdown position-relative">
-                <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuEncuestas" role="button" data-bs-toggle="dropdown">
-                    Encuestas
-                </a>
+                <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuEncuestas" role="button" data-bs-toggle="dropdown">Encuestas</a>
                 <ul class="dropdown-menu dropdown-menu-custom shadow" aria-labelledby="menuEncuestas">
                     <li><a class="dropdown-item" href="encuestas.html">Encuestas Pendientes</a></li>
                 </ul>
@@ -188,7 +180,8 @@
                     <span>Historia académica</span>
                     <div class="export-btns">
                         <button class="text-success" title="Exportar a Excel"><i class="bi bi-file-earmark-excel"></i></button>
-                        <button class="text-danger" title="Exportar a PDF"><i class="bi bi-file-earmark-pdf"></i></button>
+                        <!-- ACÁ AGREGAMOS EL ID AL BOTÓN DE PDF -->
+                        <button class="text-danger" id="btn-export-pdf" title="Exportar a PDF"><i class="bi bi-file-earmark-pdf"></i></button>
                     </div>
                 </div>
                 
@@ -235,6 +228,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let todasLasInscripciones = [];
+        let inscripcionesFiltradas = []; // Guardamos las filtradas para el PDF
         let modoVisualizacion = 'actividad'; // 'actividad' o 'anio'
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -299,6 +293,9 @@
             document.getElementById('input-busqueda').addEventListener('input', () => {
                 renderizarLista();
             });
+
+            // EVENTO PARA EXPORTAR EL PDF
+            document.getElementById('btn-export-pdf').addEventListener('click', generarPDF);
         });
 
         // Motor principal de renderizado y filtros combinados
@@ -306,19 +303,15 @@
             const contenedor = document.getElementById('lista-notas');
             contenedor.innerHTML = ''; 
 
-            // 1. Obtener estados tildados en el menú lateral
             const checkboxes = document.querySelectorAll('.filtro-estado');
             const estadosSeleccionados = Array.from(checkboxes)
                 .filter(chk => chk.checked)
                 .map(chk => chk.value.toLowerCase());
 
-            // 2. Obtener texto del buscador
             const textoBusqueda = document.getElementById('input-busqueda').value.toLowerCase();
 
-            // 3. Filtrar la lista general según checkboxes y texto de búsqueda
-            const filtradas = todasLasInscripciones.filter(insc => {
+            inscripcionesFiltradas = todasLasInscripciones.filter(insc => {
                 const estadoValido = estadosSeleccionados.includes(insc.estado.toLowerCase());
-                
                 const nombreMateria = insc.comision.materia.nombre.toLowerCase();
                 const codigoMateria = insc.comision.materia.codigo.toLowerCase();
                 const textoValido = nombreMateria.includes(textoBusqueda) || codigoMaturiaFiltro(codigoMateria, textoBusqueda);
@@ -330,29 +323,24 @@
                 return codigo.includes(texto);
             }
 
-            if(filtradas.length === 0) {
+            if(inscripcionesFiltradas.length === 0) {
                 contenedor.innerHTML = '<div class="text-muted mt-4">No hay materias que coincidan con los filtros seleccionados.</div>';
                 return;
             }
 
-            // 4. Dependiendo del botón superior, agrupamos distinto
             if (modoVisualizacion === 'actividad') {
-                renderizarPorActividad(filtradas, contenedor);
+                renderizarPorActividad(inscripcionesFiltradas, contenedor);
             } else {
-                renderizarPorAnio(filtradas, contenedor);
+                renderizarPorAnio(inscripcionesFiltradas, contenedor);
             }
         }
 
-        // Vista por Actividad/Reconocimiento (Barras Azules generales)
         function renderizarPorActividad(filtradas, contenedor) {
             const materiasAgrupadas = {};
             filtradas.forEach(insc => {
                 const codigo = insc.comision.materia.codigo;
                 if(!materiasAgrupadas[codigo]) {
-                    materiasAgrupadas[codigo] = {
-                        nombre: insc.comision.materia.nombre,
-                        registros: []
-                    };
+                    materiasAgrupadas[codigo] = { nombre: insc.comision.materia.nombre, registros: [] };
                 }
                 materiasAgrupadas[codigo].registros.push(insc);
             });
@@ -383,28 +371,118 @@
             }
         }
 
-        // Vista por Año (Agrupa primero por Año de Carrera: 1º Año, 2º Año, etc.)
         function renderizarPorAnio(filtradas, contenedor) {
             const aniosAgrupados = {};
             filtradas.forEach(insc => {
                 const anioCarrera = insc.comision.materia.anio_carrera || 1;
-                if(!aniosAgrupados[anioCarrera]) {
-                    aniosAgrupados[anioCarrera] = [];
-                }
+                if(!aniosAgrupados[anioCarrera]) { aniosAgrupados[anioCarrera] = []; }
                 aniosAgrupados[anioCarrera].push(insc);
             });
 
-            // Ordenamos los años (1, 2, 3...)
             const aniosOrdenados = Object.keys(aniosAgrupados).sort();
 
             aniosOrdenados.forEach(anio => {
                 contenedor.innerHTML += `<div class="anio-section-title">${anio}º Año</div>`;
-                
-                // Reutilizamos la lógica de agrupación por materia dentro de cada año
                 const subContenedor = document.createElement('div');
                 renderizarPorActividad(aniosAgrupados[anio], subContenedor);
                 contenedor.appendChild(subContenedor);
             });
+        }
+
+        // ==========================================
+        // FUNCIÓN MÁGICA QUE CREA EL PDF IDÉNTICO
+        // ==========================================
+        function generarPDF() {
+            // Obtenemos el nombre guardado, o ponemos un predeterminado si no hay
+            const nombreAlumno = localStorage.getItem('nombreAlumno') || 'ALUMNO';
+            
+            // Verificamos que haya materias para exportar
+            if (inscripcionesFiltradas.length === 0) {
+                alert("No hay registros visibles para exportar.");
+                return;
+            }
+
+            // Inicializamos el documento PDF en formato horizontal (landscape - 'l')
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+
+            // --- CABECERA Y LOGO ---
+            // Dibujamos el texto del Logo SIU GUARANÍ
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.setTextColor(0, 123, 199); // Azul oscuro
+            doc.text("SIU", 15, 20);
+            doc.setTextColor(91, 192, 222); // Azul claro
+            doc.text("GUARANÍ", 30, 20);
+            
+            doc.setFontSize(7);
+            doc.setTextColor(150, 150, 150);
+            doc.text("MÓDULO DE GESTIÓN ACADÉMICA", 15, 24);
+
+            // Textos superiores al estilo máquina de escribir
+            doc.setFont("courier", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            
+            doc.text("HISTORIA ACADÉMICA", 75, 15);
+            doc.text("Propuesta: Ingeniería en Computación", 140, 25);
+            doc.text(`Alumno: ${nombreAlumno.toUpperCase()}`, 140, 35);
+
+            // --- ARMADO DE LOS DATOS DE LA TABLA ---
+            const datosTabla = inscripcionesFiltradas.map(insc => {
+                // Formateamos la fecha
+                const fecha = new Date(insc.fecha_inscripcion).toLocaleDateString('es-AR', {
+                    day: '2-digit', month: '2-digit', year: 'numeric'
+                });
+                
+                // Formateamos la actividad con su código
+                const actividad = `${insc.comision.materia.nombre} (${insc.comision.materia.codigo})`;
+                
+                // Determinamos el Tipo (Promocion, Examen, Regularidad)
+                let tipo = "Regularidad";
+                if (insc.estado.toLowerCase().includes("promocion")) tipo = "Promocion";
+                else if (insc.nota_final !== null && insc.estado.toLowerCase() === "aprobada") tipo = "Examen";
+                
+                // Determinamos la Nota (letra R, L, A, o el número)
+                let notaStr = insc.nota_final !== null ? insc.nota_final.toString() : "";
+                if (notaStr === "") {
+                    if (insc.estado.toLowerCase() === "aprobada") notaStr = "A";
+                    else if (insc.estado.toLowerCase() === "ausente") notaStr = "U"; // O lo que use tu facu
+                    else notaStr = "R";
+                }
+
+                // El resultado es el estado (Aprobado, Reprobado, etc)
+                const resultado = insc.estado.charAt(0).toUpperCase() + insc.estado.slice(1);
+
+                return [fecha, actividad, tipo, notaStr, resultado];
+            });
+
+            // --- DIBUJO DE LA TABLA ESTILO SIU ---
+            doc.autoTable({
+                startY: 45, // Empezar debajo del encabezado
+                head: [['Fecha', 'Actividad', 'Tipo', 'Nota', 'Resultado']],
+                body: datosTabla,
+                theme: 'grid', // Dibuja las líneas negras
+                styles: { 
+                    font: 'courier', 
+                    fontSize: 9, 
+                    textColor: [0, 0, 0], 
+                    lineColor: [0, 0, 0], 
+                    lineWidth: 0.1 
+                },
+                headStyles: { 
+                    fillColor: [255, 255, 255], // Cabecera en blanco
+                    textColor: [0, 0, 0], 
+                    fontStyle: 'normal' 
+                },
+                alternateRowStyles: { 
+                    fillColor: [220, 220, 220] // Filas intercaladas en gris
+                },
+                margin: { top: 45, left: 15, right: 15 }
+            });
+
+            // Descargar el archivo
+            doc.save(`Historia_Academica_${nombreAlumno.replace(/\s+/g, '_')}.pdf`);
         }
     </script>
 </body>
