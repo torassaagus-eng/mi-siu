@@ -26,6 +26,19 @@
         .nav-bar-custom .nav-link { color: #666; font-size: 13px; padding: 10px 15px; border-right: 1px solid #e7e7e7; }
         .nav-bar-custom .nav-link:hover { background-color: #e6e6e6; }
         .nav-right-edge { border-left: 1px solid #e7e7e7; }
+
+        /* Efecto Globo de Diálogo para el Menú Encuestas */
+        .dropdown-menu-custom { margin-top: 8px !important; border-radius: 3px; border: 1px solid #ccc; font-size: 13px; padding: 5px 0; }
+        .dropdown-menu-custom::before {
+            content: ""; position: absolute; top: -6px; left: 20px;
+            border-width: 0 6px 6px; border-style: solid;
+            border-color: transparent transparent #fff; z-index: 10;
+        }
+        .dropdown-menu-custom::after {
+            content: ""; position: absolute; top: -7px; left: 19px;
+            border-width: 0 7px 7px; border-style: solid;
+            border-color: transparent transparent #ccc; z-index: 9;
+        }
         
         /* Títulos */
         .greeting { color: #0088cc; font-size: 22px; font-weight: normal; margin-top: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -83,33 +96,38 @@
             <div class="d-flex">
                 <a href="#" class="nav-link text-decoration-none">Inscripción a Materias</a>
                 <a href="#" class="nav-link text-decoration-none">Inscripción a Exámenes</a>
-<!-- Menú Desplegable de Reportes -->
-<div class="nav-item dropdown d-flex">
-    <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Reportes
-    </a>
-    <ul class="dropdown-menu shadow" aria-labelledby="menuReportes" style="font-size: 13px; border-radius: 2px;">
-        <li><a class="dropdown-item" href="#">Actuación provisoria</a></li>
-        <li><a class="dropdown-item" href="#">Agenda</a></li>
-        <li><a class="dropdown-item" href="historia.html">Historia académica</a></li>
-        <li><a class="dropdown-item" href="#">Inasistencias</a></li>
-        <li><a class="dropdown-item" href="#">Mis inscripciones</a></li>
-        <li><a class="dropdown-item" href="#">Cronograma de evaluaciones</a></li>
-        <li><a class="dropdown-item" href="#">Oferta de comisiones</a></li>
-        <li><a class="dropdown-item" href="#">Plan de estudios</a></li>
-        <li><a class="dropdown-item" href="#">Seguimiento de Solicitud de Título</a></li>
-        <li><a class="dropdown-item" href="#">Reporte de Solicitudes de Readmisión</a></li>
-        <li><a class="dropdown-item" href="#">Promedio y porcentaje de avance en la carrera</a></li>
-    </ul>
-</div>                <!-- Nuevo Menú Encuestas -->
-            <div class="nav-item dropdown position-relative">
-                <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuEncuestas" role="button" data-bs-toggle="dropdown">
-                    Encuestas
-                </a>
-                <ul class="dropdown-menu dropdown-menu-custom shadow" aria-labelledby="menuEncuestas">
-                    <li><a class="dropdown-item" href="encuestas.html">Encuestas Pendientes</a></li>
-                </ul>
-            </div>
+                
+                <!-- Menú Desplegable de Reportes -->
+                <div class="nav-item dropdown d-flex">
+                    <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Reportes
+                    </a>
+                    <ul class="dropdown-menu shadow" aria-labelledby="menuReportes" style="font-size: 13px; border-radius: 2px;">
+                        <li><a class="dropdown-item" href="actuacion.html">Actuación provisoria</a></li>
+                        <li><a class="dropdown-item" href="agenda.html">Agenda</a></li>
+                        <li><a class="dropdown-item" href="historia.html">Historia académica</a></li>
+                        <li><a class="dropdown-item" href="inasistencias.html">Inasistencias</a></li>
+                        <li><a class="dropdown-item" href="inscripciones.html">Mis inscripciones</a></li>
+                        <li><a class="dropdown-item" href="cronograma.html">Cronograma de evaluaciones</a></li>
+                        <li><a class="dropdown-item" href="oferta.html">Oferta de comisiones</a></li>
+                        <li><a class="dropdown-item" href="plan.html">Plan de estudios</a></li>
+                        <li><a class="dropdown-item" href="seguimiento_titulo.html">Seguimiento de Solicitud de Título</a></li>
+                        <li><a class="dropdown-item" href="seguimiento_educacion.html">Seguimiento de Solicitud de Título en la Secretaría de Educación</a></li>
+                        <li><a class="dropdown-item" href="seguimiento_tesis.html">Seguimiento de Tesis</a></li>
+                        <li><a class="dropdown-item" href="readmision.html">Reporte de Solicitudes de Readmisión</a></li>
+                        <li><a class="dropdown-item" href="avance.html">Promedio y porcentaje de avance en la carrera</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Nuevo Menú Encuestas -->
+                <div class="nav-item dropdown position-relative">
+                    <a class="nav-link text-decoration-none dropdown-toggle" href="#" id="menuEncuestas" role="button" data-bs-toggle="dropdown">
+                        Encuestas
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-custom shadow" aria-labelledby="menuEncuestas">
+                        <li><a class="dropdown-item" href="encuestas.html">Encuestas Pendientes</a></li>
+                    </ul>
+                </div>
                 <a href="#" class="nav-link text-decoration-none">Trámites <i class="bi bi-caret-down-fill"></i></a>
                 <a href="#" class="nav-link text-decoration-none">Mis datos personales</a>
                 <a href="#" class="nav-link text-decoration-none">Cursos</a>
