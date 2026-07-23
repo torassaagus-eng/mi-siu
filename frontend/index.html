@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     
-                    <button id="btn-login" class="btn btn-ingresar px-4 py-1 mt-2">Ingresar</button>
+                    <button id="btn-login" type="submit" class="btn btn-ingresar px-4 py-1 mt-2">Ingresar</button>
                 </form>
                 
                 <div class="mt-4">
@@ -113,7 +113,7 @@
     </div>
 
 <script>
-    document.getElementById('btn-login').addEventListener('click', async (evento) => {
+    document.getElementById('form-login').addEventListener('submit', async (evento) => {
         evento.preventDefault();
 
         const dniIngresado = document.getElementById('input-usuario').value;
