@@ -57,11 +57,11 @@ async function main() {
     { cod: "CC02", nom: "Ingeniería en Computación I", anio_carrera: 2, cuatrimestre: 2, notas: [{ est: "Aprobada", nota: 7, fecha: "2025-12-22" }] },
 
     // --- TERCER AÑO | 1º Cuatrimestre ---
-    { cod: "CB15", nom: "Probabilidad y Estadística", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2026-07-04" }] },
-    { cod: "CB16", nom: "Física III", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2026-07-09" }] },
+    { cod: "CB15", nom: "Probabilidad y Estadística", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Regular", nota: 5, fecha: "2026-07-20" }] },
+    { cod: "CB16", nom: "Física III", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 6, fecha: "2026-07-21" }] },
     { cod: "CC03", nom: "Programación", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 7, fecha: "2026-07-14" }] },
     { cod: "CC04", nom: "Electrónica Analógica", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Aprobada", nota: 7, fecha: "2026-07-19" }] },
-    { cod: "CC16", nom: "Inglés III", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Promocionada", nota: 8, fecha: "2026-07-24" }] }
+    { cod: "CC16", nom: "Inglés III", anio_carrera: 3, cuatrimestre: 1, notas: [{ est: "Promocionada", nota: 8, fecha: "2026-07-10" }] }
   ];
 
   // 4. Guardamos todo en la base de datos
