@@ -30,26 +30,30 @@ app.get('/materias', async (req, res) => {
   }
 });
 
-// RUTA DE HISTORIA ACADÉMICA
+// RUTA DE HISTORIA ACADÉMICA (Modo directo por DNI)
 app.get('/historia/:dni', async (req, res) => {
   const { dni } = req.params;
   try {
+    // Buscamos primero al usuario para obtener su ID real
     const alumno = await prisma.usuario.findUnique({
-      where: { dni: dni },
+      where: { dni: dni }
+    });
+
+    if (!alumno) {
+      return res.status(404).json({ error: "Alumno no encontrado con ese DNI" });
+    }
+
+    // Traemos las inscripciones usando el ID exacto del usuario encontrado
+    const inscripciones = await prisma.inscripcionCursada.findMany({
+      where: { alumno_id: alumno.id },
       include: {
-        inscripcionCursada: {
-          include: {
-            comision: {
-              include: { materia: true }
-            }
-          }
+        comision: {
+          include: { materia: true }
         }
       }
     });
 
-    if (!alumno) return res.status(404).json({ error: "Alumno no encontrado" });
-
-    res.json(alumno.inscripcionCursada);
+    res.json(inscripciones);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al cargar la historia" });
