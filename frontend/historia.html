@@ -374,15 +374,17 @@
         function renderizarPorAnio(filtradas, contenedor) {
             const aniosAgrupados = {};
             filtradas.forEach(insc => {
-                const anioCarrera = insc.comision.materia.anio_carrera || 1;
-                if(!aniosAgrupados[anioCarrera]) { aniosAgrupados[anioCarrera] = []; }
-                aniosAgrupados[anioCarrera].push(insc);
+                const fecha = new Date(insc.fecha_inscripcion);
+                const anioCalendario = fecha.getFullYear();
+                
+                if(!aniosAgrupados[anioCalendario]) { aniosAgrupados[anioCalendario] = []; }
+                aniosAgrupados[anioCalendario].push(insc);
             });
 
-            const aniosOrdenados = Object.keys(aniosAgrupados).sort();
+            const aniosOrdenados = Object.keys(aniosAgrupados).sort((a, b) => b - a);
 
             aniosOrdenados.forEach(anio => {
-                contenedor.innerHTML += `<div class="anio-section-title">${anio}º Año</div>`;
+                contenedor.innerHTML += `<div class="anio-section-title">${anio}</div>`;
                 const subContenedor = document.createElement('div');
                 renderizarPorActividad(aniosAgrupados[anio], subContenedor);
                 contenedor.appendChild(subContenedor);
