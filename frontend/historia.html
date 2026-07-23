@@ -218,7 +218,7 @@
 
                 if (dni) {
                     try {
-                        const respuesta = await fetch(`http://localhost:3000/historia/${dni}`);
+                        const respuesta = await fetch(`/historia/${dni}`);
                         todasLasInscripciones = await respuesta.json(); 
                         renderizarLista(); 
                     } catch (error) {
