@@ -12,7 +12,7 @@ async function main() {
         nombre_completo: "Agustin Torassa",
         email: "torassaagus@gmail.com",
         rol: "ALUMNO",
-        dni: "40000000",
+        dni: "46218679",
         password_hash: "temp_password"
       }
     });
